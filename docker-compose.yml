@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    volumes:
+      - ./data/daynamo/data:/home/dynamodblocal/data
+    ports:
+      - 8000:8000
+    command: -jar DynamoDBLocal.jar -dbPath ./data -sharedDb
+
+  dynamodbadmin:
+    image: instructure/dynamo-local-admin
+    networks:
+      - default
+    ports:
+      - 8001:8001
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb:8000/
