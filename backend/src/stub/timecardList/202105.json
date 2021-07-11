@@ -4,26 +4,32 @@
     "work_date": "2021-05-01",
     "work_record": {
       "start": "09:00:00",
-      "end": "18:00:00"
+      "end": "18:00:00",
+      "place": "自宅"
     },
-    "place": "自宅"
+    "total": "08:00:00",
+    "overtime": "00:00:00"
   },
   {
     "user_id": "test_user",
     "work_date": "2021-05-02",
     "work_record": {
       "start": "09:30:00",
-      "end": "18:00:00"
+      "end": "18:00:00",
+      "place": "自宅"
     },
-    "place": "自宅"
+    "total": "07:30:00",
+    "overtime": "00:00:00"
   },
   {
     "user_id": "test_user",
     "work_date": "2021-05-03",
     "work_record": {
       "start": "09:00:00",
-      "end": "18:00:00"
+      "end": "20:00:00",
+      "place": "本社"
     },
-    "place": "本社"
+    "total": "10:00:00",
+    "overtime": "02:00:00"
   }
 ]

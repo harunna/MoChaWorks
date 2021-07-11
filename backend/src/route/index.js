@@ -12,8 +12,8 @@ router.get('/:user_id/:date', (req, res) => {
   }
 });
 
-router.get('/list/:user_id', (req, res) => {
-  console.log('get URL : /list/:user_id');
+router.get('/list/:userId', (req, res) => {
+  console.log('get URL : /list/:userId');
   try {
     timecardList.get(req, res);
   } catch (err) {
@@ -21,8 +21,8 @@ router.get('/list/:user_id', (req, res) => {
   }
 });
 
-router.get('/list/:user_id/:month', (req, res) => {
-  console.log('get URL : /list/:user_id/:month');
+router.get('/list/:userId/:month', (req, res) => {
+  console.log('get URL : /list/:userId/:month');
   try {
     timecardList.get(req, res);
   } catch (err) {

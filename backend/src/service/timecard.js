@@ -5,12 +5,12 @@ const timecard_20210503 = JSON.parse(fs.readFileSync('src/stub/timecard/20210503
 
 const get = (req, res) => {
   console.log('getTimeCard');
-  const params = req.params;
-  if (params.user_id !== 'test_user') {
+  const { user_id, date } = req.params;
+  if (user_id !== 'test_user') {
     res.status(204);
     return;
   }
-  switch (params.date) {
+  switch (date) {
     case '20210501':
       res.status(200).json(timecard_20210501);
       break;
@@ -21,7 +21,7 @@ const get = (req, res) => {
       res.status(200).json(timecard_20210503);
       break;
     default:
-      res.status(204);
+      res.status(404);
       break;  
   }
 };
