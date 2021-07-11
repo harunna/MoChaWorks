@@ -1,28 +1,33 @@
+const dynamoDB = require('../datastore/dynamo');
+
+const stubMode = require('../../config/config.json')['stub_mode'];
 const fs = require('fs');
 const timecardList_202105 = JSON.parse(fs.readFileSync('src/stub/timecardList/202105.json', 'utf8'));
 const timecardList_202106 = JSON.parse(fs.readFileSync('src/stub/timecardList/202106.json', 'utf8'));
 
-const get = (req, res) => {
+const get = async (req, res) => {
   console.log('timecardList');
   const { userId, month } = req.params;
-  let list = [];
-  switch (month) {
-    case '2021-05':
-      console.log('A');
-      list = createList(userId, month, timecardList_202105)
-      res.status(200).json(list);
-      break;
-    case '2021-06':
-      console.log('B');
-      list = createList(userId, month, timecardList_202106)
-      res.status(200).json(list);
-      break;
-    default:
-      console.log('C');
-      list = createList(userId, month, [])
-      res.status(200).json(list);
-      // res.status(404).send('Not Found');
-      break;
+
+  if (stubMode) {
+    execStub(userId, month, res);
+    return;
+  }
+
+  const param = {
+    TableName: 'TimeCard',
+    KeyConditionExpression: 'user_id = :user_id and work_date >= :work_date',
+    ExpressionAttributeValues: {
+      ':user_id': userId,
+      ':work_date': month,
+    }
+  };
+
+  try {
+    const result = await dynamoDB.query(param);    
+    res.status(200).json(createList(userId, month, result.Items));
+  } catch (e) {
+    res.status(200).json(e);
   }
 };
 
@@ -61,6 +66,25 @@ const createList = (userId, yearMonth, records) => {
   });
   return list;
 }
+
+const execStub = (userId, month, res) => {
+  let list = [];
+  switch (month) {
+    case '2021-05':
+      list = createList(userId, month, timecardList_202105)
+      res.status(200).json(list);
+      break;
+    case '2021-06':
+      list = createList(userId, month, timecardList_202106)
+      res.status(200).json(list);
+      break;
+    default:
+      list = createList(userId, month, [])
+      res.status(200).json(list);
+      break;
+  }
+};
+
 
 const timecardList = {
   get,
