@@ -7,6 +7,13 @@ export namespace Const {
     attendance: "/attendance"
   }
 
+  // 端末区分
+  export enum TerminalCat {
+    pc = "1",
+    iPad = "2",
+    iPhone = "3"
+  }
+
   export const AWS_SETTINGS = {
     region: 'ap-northeast-1',
     identityPoolId: 'ap-northeast-1:c6ab65fa-239d-4a99-ae8a-4f8658a9595b',

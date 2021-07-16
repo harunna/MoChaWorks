@@ -6,6 +6,6 @@ export interface ColorProps {
 
 export default {
   WHITE: '#fff',
-  PRIMARY: '#aaa',
-  SECONDRY: '#aaa'
+  PRIMARY: '#A0D2CA',
+  SECONDRY: '#127099'
 }

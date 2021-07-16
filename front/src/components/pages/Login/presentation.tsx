@@ -8,6 +8,7 @@ import { AuthState, login } from '../../../reducers/auth';
 import { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Const } from '../../../lib/commonUtil';
+import { ReactComponent as HomeIcon } from '../../../assets/img/icons/icon-home.svg';
 
 type Props = RouteComponentProps<{}> & {
   login: typeof login;
@@ -41,7 +42,7 @@ function Login(props: Props) {
   return (
     <Wrapper>
       <Contents>
-        <h1>TAKE NO MANAGEMENT</h1>
+        <AppName className="font-effect-emboss">Take<AppIcon/>Mane</AppName>
         <FormWrap>
           <StyledTextField placeholder="UserName" onChange={handleChangeUserId}/>
           <StyledTextField placeholder="Password" onChange={handleChangePassword} type="password"/>
@@ -55,7 +56,7 @@ function Login(props: Props) {
 }
 
 const Wrapper = styled.div`
-  background-color: #F1F18D;
+  background-color: #A0D2CA;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -68,13 +69,6 @@ const Contents = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: fit-content;
-  > h1 {
-    color: #707070;
-    margin-top: 0px;
-    font-weight: 400;
-    margin-bottom: 100px;
-  }
 `;
 
 const StyledTextField = styled(InputBase)`
@@ -85,20 +79,40 @@ const StyledTextField = styled(InputBase)`
   background-color: #fff;
   display: block;
   width: 250px;
+  padding: 8px 8px 8px 20px;
 `;
 
 const FormWrap = styled.div`
   margin-bottom: 40px;
 `;
 
+const AppName = styled.h1`
+  color: ${props => props.theme.color.WHITE};
+  margin-top: 0px;
+  font-weight: bold;
+  margin-bottom: 100px;
+  font-size: 45px;
+  font-family: 'Open Sans',sans-serif;
+  display: flex;
+  align-items: inherit;
+`;
+
+const AppIcon = styled(HomeIcon)`
+  width: 45px;
+  height: 45px;
+  margin: 0px 10px;
+  fill: #025;
+`;
+
 const StyledButton = styled(Button)`
   background-color: #B8BCD2;
+  font-weight: bold;
   color: #fff;
   width: 150px;
   height: 45px;
 
   &:hover {
-    background-color: #000;
+    background-color: #025;
   }
 `;
 
