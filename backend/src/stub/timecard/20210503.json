@@ -1,0 +1,11 @@
+{
+  "user_id": "test_user",
+  "work_date": "2021-05-03",
+  "work_record": {
+    "start": "09:00:00",
+    "end": "20:00:00",
+    "place": "本社"
+  },
+  "total": "10:00:00",
+  "overtime": "02:00:00"
+}
