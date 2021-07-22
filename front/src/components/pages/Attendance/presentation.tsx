@@ -1,7 +1,14 @@
 import React from 'react';
+import CommonHeader from '../../organisms/CommonHeader';
+import Attendance from '../../organisms/Attendance';
 
-export default () => {
+function AttendanceContainer() {
   return (
-    <div>sample!!</div>
+    <React.Fragment>
+      <CommonHeader />
+      <Attendance />
+    </React.Fragment>
   );
 }
+
+export default AttendanceContainer;
