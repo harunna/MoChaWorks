@@ -4,7 +4,7 @@ import { InputBase, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { State as RootState } from "../../../reducers";
 import { bindActionCreators, Dispatch } from 'redux';
-import { AuthState, login } from '../../../reducers/auth';
+import { login } from '../../../reducers/auth';
 import { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Const } from '../../../lib/commonUtil';
@@ -12,12 +12,11 @@ import { ReactComponent as HomeIcon } from '../../../assets/img/icons/icon-home.
 
 type Props = RouteComponentProps<{}> & {
   login: typeof login;
-  auth: AuthState;
+  token: string;
 }
 
 function Login(props: Props) {
-  const { history, auth } = props;
-  const { token } = auth;
+  const { history, token } = props;
   const [userId, inputUserId] = useState("");
   const [password, inputPassword] = useState("");
 
@@ -118,7 +117,7 @@ const StyledButton = styled(Button)`
 
 const mapStateToProps = (state: RootState) => {
   return {
-    auth: state.auth
+    token: state.auth.jwtToken
   }
 }
 

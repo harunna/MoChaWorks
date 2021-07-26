@@ -1,17 +1,17 @@
 import { GridColDef } from '@material-ui/data-grid';
 
-export const Columns: GridColDef[] = [
+export const WorkingGridColumns: GridColDef[] = [
   { 
     field: 'workDate',
     headerName: 'WorkDate',
     headerClassName: 'list-view-theme--header',
-    width: 150,
+    width: 180,
   },
   {
     field: 'workStart',
     headerName: 'Start',
     headerClassName: 'list-view-theme--header',
-    width: 150,
+    width: 180,
     editable: true,
   },
   {

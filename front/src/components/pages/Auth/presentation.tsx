@@ -1,20 +1,16 @@
 import React, { createContext } from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
-import { Const } from '../../../lib/commonUtil';
-import { State as RootState } from "../../../reducers";
-import { AwsToken } from '../../../reducers/auth';
+import { Const, storage } from '../../../lib/commonUtil';
 
 interface Props {
   children: JSX.Element;
-  token: AwsToken;
 }
 
 const ThemeContext = createContext('light');
 
 function Auth(props: Props) {
-  const { token, children } = props;
-  if (!token) {
+  const { children } = props;
+  if (!storage.token) {
     return <Redirect to={Const.PATH_NAME.auth} />;
   }
   return (
@@ -24,11 +20,4 @@ function Auth(props: Props) {
   );
 }
 
-const mapStateToProps = (state: RootState) => {
-  return {
-    token: state.auth.token
-  }
-}
-
-const enhancer = connect(mapStateToProps);
-export default enhancer(Auth);
+export default Auth;

@@ -1,5 +1,8 @@
 import { ServerConfig } from "../config/config";
 
+/**
+ * 共通定数
+ */
 export namespace Const {
   export const BASE_ROUTE = ServerConfig.BASE_ROUTE;
   export const PATH_NAME = {
@@ -21,3 +24,39 @@ export namespace Const {
     clientId: '4tu25ldrbbp63qopno880hvboa'
   }
 }
+
+/**
+ * sessionStorage
+ */
+class Storage {
+  StorageKey = {
+    token: "token",
+    userId: "userId"
+  }
+
+  get token(): string | null {
+    return sessionStorage.getItem(this.StorageKey.token);
+  }
+
+  set token(value: string | null) {
+    if (value) {
+      sessionStorage.setItem(this.StorageKey.token, value);
+    } else {
+      sessionStorage.removeItem(this.StorageKey.token);
+    }
+  }
+
+  get userId(): string | null {
+    return sessionStorage.getItem(this.StorageKey.userId);
+  }
+
+  set userId(value: string | null) {
+    if (value) {
+      sessionStorage.setItem(this.StorageKey.userId, value);
+    } else {
+      sessionStorage.removeItem(this.StorageKey.userId);
+    }
+  }
+}
+
+export const storage = new Storage();

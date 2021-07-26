@@ -1,65 +1,70 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { DataGrid } from '@material-ui/data-grid';
-import { makeStyles, Paper } from '@material-ui/core';
-import { Columns } from './columns';
+import { DataGrid, GridColDef, GridRowId } from '@material-ui/data-grid';
+import { Paper } from '@material-ui/core';
+import { WorkingGridColumns } from './columns';
 import { ReactComponent as Setting } from '../../../assets/img/icons/icon-settings.svg';
 import { ReactComponent as ArrowLeft } from '../../../assets/img/icons/icon-arrow-left.svg';
 import { ReactComponent as ArrowRight } from '../../../assets/img/icons/icon-arrow-right.svg';
 import { ReactComponent as Export } from '../../../assets/img/icons/icon-export.svg';
+import { getAttendanceList } from '../../../reducers/attendance';
+import { useStyles } from './styles';
 
-const rows = [
-  { id: 1, workDate: '2021-07-01', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "", workPlace: '本社' },
-  { id: 2, workDate: '2021-07-02', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '自宅' },
-  { id: 3, workDate: '2021-07-03', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '本社' },
-  { id: 4, workDate: '2021-07-04', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '自宅' },
-  { id: 5, workDate: '2021-07-05', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '本社' },
-  { id: 6, workDate: '2021-07-06', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '本社' },
-  { id: 7, workDate: '2021-07-07', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '本社' },
-  { id: 8, workDate: '2021-07-08', workStart: '09:01:00', workEnd: '18:30:00', workOver: "", workTotal: "",  workPlace: '本社' },
-];
+export type DataRowModel = {
+  id: GridRowId;
+  workDate: string;
+  workStart: string;
+  workEnd: string;
+  workOver: string;
+  workTotal: string;
+  workPlace: string;
+}
 
-const useStyles = makeStyles({
-  root: {
-    border: 0,
-    '& .list-view-theme--header': {
-      backgroundColor: '#2999AB',
-      color: '#fff',
-    },
-    '& .MuiDataGrid-iconSeparator': {
-      display: 'none',
-    },
-    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-      borderRight: '1px solid rgba(224, 224, 224, 1)'
-    },
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-      borderBottom: '1px solid rgba(224, 224, 224, 1)',
-    },
-    '& .MuiDataGrid-cell': {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    '& .MuiDataGrid-row:nth-child(odd)': {
-      backgroundColor: '#E5F6F9'
-    },
-    '& .MuiDataGrid-row:hover': {
-      backgroundColor: '#BFC4DB'
-    }
-  },
-});
+export interface GridData {
+  columns: GridColDef[];
+  rows: DataRowModel[];
+}
 
-function WorkingTable() {
+type Props = {
+  attendanceList: AttendanceApi.Get.Response[];
+  getAttendanceList: typeof getAttendanceList;
+}
+
+function WorkingTable(props: Props) {
   const classes = useStyles();
+  const { getAttendanceList, attendanceList } = props;
+  const [ attendanceRows, setAttendanceRows ] = React.useState<GridData>({ columns: [], rows: [] });
+
+  useEffect(() => {
+    getAttendanceList('2021-05');
+  }, [getAttendanceList]);
+
+  useEffect(() => {
+    setAttendanceRows({
+      columns: WorkingGridColumns,
+      rows: attendanceList.map((list, index) => {
+        return {
+          id: `${list.user_id}_${index}`,
+          workDate: list.work_date,
+          workStart: list.work_record.start,
+          workEnd: list.work_record.end,
+          workOver: list.overtime,
+          workTotal: list.total,
+          workPlace: list.work_record.place
+        }
+      })
+    });
+  }, [attendanceList]);
+
   return (
-    <GridContainer>
+    <Wrapper>
       <Caption>
         <ArrowLeft />Works<span>July</span>2021<ArrowRight />
       </Caption>
       <ButtonGroup><Export /><Setting /></ButtonGroup>
       <DataGrid
+        {...attendanceRows}
         className={classes.root}
-        rows={rows}
-        columns={Columns}
         pageSize={31}
         rowHeight={32}
         headerHeight={30}
@@ -68,7 +73,7 @@ function WorkingTable() {
         disableSelectionOnClick
         disableColumnMenu
       />
-    </GridContainer>
+    </Wrapper>
   );
 }
 
@@ -90,9 +95,9 @@ const Caption = styled.h1`
   }
 `;
 
-const GridContainer = styled(Paper)`
-  height: 600px;
-  width: 900px;
+const Wrapper = styled(Paper)`
+  height: 800px;
+  width: 1100px;
   border-radius: 10px;
   background-color: ${props => props.theme.color.WHITE};
   padding: 10px 10px 0px;

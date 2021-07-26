@@ -1,21 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Const } from '../../../lib/commonUtil';
 import WorkingGrid from '../WorkingGrid';
-import TodayWorks from '../../molecules/TodayWorks';
-import { useEffect } from 'react';
 
 function Attendance() {
-  useEffect(() => {
-    
-  // @ts-ignore
-  }, []);
-
   return (
     <Wrapper terminalCat="1">
-      <TodayWorks />
-        <WorkingGrid />
-      <TodayWorks />
+      <WorkingGrid />
     </Wrapper>
   );
 }

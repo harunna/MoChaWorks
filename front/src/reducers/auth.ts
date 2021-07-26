@@ -1,3 +1,4 @@
+import { storage } from "../lib/commonUtil";
 import { CognitoResponse } from "../lib/types/cognitoResponse";
 import { signIn } from "../service/login";
 
@@ -6,27 +7,38 @@ type ThunkAction<A> = (dispatch: (a: A) => void | Promise<void>) => void | Promi
 
 export type AwsToken = CognitoResponse | null;
 export interface AuthState {
-  token: AwsToken;
+  userId: string;
+  jwtToken: string;
 }
 
 export interface authSuccessAction {
   type: 'ACCOUNT__AUTH_SUCCESS',
   payload: {
-    value: CognitoResponse
+    userId: string,
+    jwtToken: string
   }
 }
 
 function authSuccess(token: CognitoResponse): authSuccessAction {
+  const userId = token.idToken.payload["cognito:username"];
+  const jwtToken = token.idToken.jwtToken;
+
+  // sessionStorageにjwtTokenを保存
+  storage.userId = userId;
+  storage.token = jwtToken;
+  
   return {
     type: 'ACCOUNT__AUTH_SUCCESS',
     payload: {
-      value: token
+      userId: userId,
+      jwtToken: jwtToken
     }
   }
 }
 
 const initialState: AuthState = {
-  token: null
+  userId: "",
+  jwtToken: "",
 }
 
 export function login(userName: string, password: string): ThunkAction<authSuccessAction> {
@@ -45,7 +57,11 @@ type Action = authSuccessAction;
 export default (state: AuthState = initialState, action: Action): AuthState => {
   switch(action.type) {
     case 'ACCOUNT__AUTH_SUCCESS':
-      return { ...state, token: action.payload.value };
+      return {
+        ...state,
+        userId: action.payload.userId,
+        jwtToken: action.payload.jwtToken
+      };
 
     default:
       return state;
