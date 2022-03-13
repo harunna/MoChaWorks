@@ -1,14 +1,17 @@
 import { AxiosResponse } from "axios"
+import moment from "moment"
 import { ThunkAction } from "."
 import { storage } from "../lib/commonUtil"
 import { WebApi } from "../lib/webApi"
 
 export interface AttendanceState {
-  attendanceList: AttendanceApi.Get.Response[]
+  attendanceList: AttendanceApi.Get.Response[];
+  month: string;
 }
 
 const initialState: AttendanceState = {
-  attendanceList: []
+  attendanceList: [],
+  month: moment().format('yyyy-MM')
 }
 
 interface FetchAttendanceListSuccess {
@@ -27,15 +30,16 @@ function fetchSuccessGetAttendanceList(data: AttendanceApi.Get.Response[]): Fetc
   }
 }
 
+
 /**
  * 1か月分の勤務リストを取得する
- * @param workDate 
+ * @param month  yyyy-mm
  */
-export function getAttendanceList(workDate: string): ThunkAction<FetchAttendanceListSuccess> {
-  return async (dispatch, getState) => {
+export function getAttendanceList(month: string): ThunkAction<FetchAttendanceListSuccess> {
+  return async (dispatch) => {
     try {
       if (!storage.userId) { return ;}
-      const params: AttendanceApi.Get.Request = { user_id: storage.userId, work_date: workDate };
+      const params: AttendanceApi.Get.Request = { user_id: storage.userId, month: month };
       const response: AxiosResponse<AttendanceApi.Get.Response[]> = await WebApi.getAttendanceList(dispatch, params);
       dispatch(fetchSuccessGetAttendanceList(response.data))
     } catch(err) {
@@ -52,6 +56,7 @@ export default (state: AttendanceState = initialState, action: Action): Attendan
         ...state,
         attendanceList: action.payload.data
       }
+
     default:
       return { ...state }
   }

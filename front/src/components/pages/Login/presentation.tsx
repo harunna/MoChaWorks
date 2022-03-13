@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
-import styled from 'styled-components';
-import { InputBase, Button } from '@material-ui/core';
+import styled from '@emotion/styled';
+import { InputBase, Button } from '@mui/material';
 import { connect } from 'react-redux';
 import { State as RootState } from "../../../reducers";
 import { bindActionCreators, Dispatch } from 'redux';
@@ -75,7 +75,7 @@ const StyledTextField = styled(InputBase)`
   border: solid 1px;
   padding: 8px;
   border-color: #aaa;
-  background-color: #fff;
+  background-color: ${props => props.theme.color.WHITE};
   display: block;
   width: 250px;
   padding: 8px 8px 8px 20px;

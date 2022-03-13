@@ -19,8 +19,7 @@ export namespace WebApi {
 
   export function getAttendanceList(dispatch: Dispatch, params: AttendanceApi.Get.Request) {
     const { url } = Endpoints.GET_ATTENDANCE_LIST;
-    const concatUrl = `${url}/${params.user_id}/${params.work_date}`;
-    console.log(concatUrl);
+    const concatUrl = `${url}?user_id=${params.user_id}&month=${params.month}`;
     return get<{}, AttendanceApi.Get.Response[]>(dispatch, {}, concatUrl);
   }
 
@@ -43,7 +42,7 @@ export namespace WebApi {
     method: 'post' | 'get',
     params: {},
     url: string,
-    dispatch: Dispatch| null,
+    dispatch: Dispatch| null, // 通知出力用
   ) {
     return new Promise<AxiosResponse<T>>((resolve, reject) => {
       let requestData = {};
@@ -95,6 +94,9 @@ export namespace WebApi {
         })
         // ここで正常終了した場合の通知処理
         .then((response) => {
+          console.log(response, 'response');
+          console.log('正常終了');
+
           return resolve(response);
         })
         // ここで異常終了した場合の通知処理

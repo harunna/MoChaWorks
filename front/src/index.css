@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -17,6 +17,5 @@ code {
 svg {
   height: 30px;
   width: 30px;
-  fill: #efffff;
   cursor: pointer;
 }

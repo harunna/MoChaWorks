@@ -1,27 +1,41 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Const } from '../../../lib/commonUtil';
+import styled from '@emotion/styled';
+import ClockBox from '../../molecules/ClockBox';
 import WorkingGrid from '../WorkingGrid';
 
 function Attendance() {
   return (
     <Wrapper terminalCat="1">
-      <WorkingGrid />
+      <BoxContainer>
+        <ClockBox />
+      </BoxContainer>
+      <WorkingGridContainer>
+        <WorkingGrid />
+      </WorkingGridContainer>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div<{terminalCat: string}>`
+const WorkingGridContainer = styled.div`
+  margin: 0 auto;
+  width: 1080px;
+`;
+
+const BoxContainer = styled.div`
   display: flex;
+  margin-bottom: 20px;
+  width: 1080px;
+`;
+
+const Wrapper = styled.div<{ terminalCat: string }>`
+  background-color: #f9f5e3;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background-color: ${props => props.theme.color.SECONDRY};
-  height: calc(100vh - ${props => ({ terminalCat }) => 
-  terminalCat === Const.TerminalCat.pc ? 
-    props.theme.layout.header.default : 
-      terminalCat === Const.TerminalCat.iPad ? 
-        props.theme.layout.header.tablet :
-          props.theme.layout.header.mobile});
+  padding-top: 20px;
+  box-sizing: border-box;
+  height: calc(100vh - 50px);
 `;
 
 export default Attendance;

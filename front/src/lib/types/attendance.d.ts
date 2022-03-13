@@ -1,7 +1,7 @@
 namespace AttendanceApi.Get {
   interface Request {
     user_id: string,
-    work_date: string
+    month: string
   }
 
   interface Response {

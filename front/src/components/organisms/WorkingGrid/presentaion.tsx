@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { DataGrid, GridColDef, GridRowId } from '@material-ui/data-grid';
-import { Paper } from '@material-ui/core';
-import { WorkingGridColumns } from './columns';
+import styled from '@emotion/styled';
+import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
+import { Const } from '../../../lib/commonUtil';
 import { ReactComponent as Setting } from '../../../assets/img/icons/icon-settings.svg';
-import { ReactComponent as ArrowLeft } from '../../../assets/img/icons/icon-arrow-left.svg';
-import { ReactComponent as ArrowRight } from '../../../assets/img/icons/icon-arrow-right.svg';
 import { ReactComponent as Export } from '../../../assets/img/icons/icon-export.svg';
 import { getAttendanceList } from '../../../reducers/attendance';
+import CalendarPicker from '../../molecules/CalendarPicker';
 import { useStyles } from './styles';
+import moment from 'moment';
+import { Paper } from '@mui/material';
 
 export type DataRowModel = {
   id: GridRowId;
@@ -25,18 +25,61 @@ export interface GridData {
   rows: DataRowModel[];
 }
 
+export const WorkingGridColumns: GridColDef[] = [
+  { 
+    field: 'workDate',
+    headerName: 'WorkDate',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 180,
+  },
+  {
+    field: 'workStart',
+    headerName: 'Start',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 180,
+    editable: true,
+  },
+  {
+    field: 'workEnd',
+    headerName: 'End',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+    editable: true,
+  },
+  {
+    field: 'workOver',
+    headerName: 'Over',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+    editable: true,
+  },
+  {
+    field: 'workTotal',
+    headerName: 'Total',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+  },
+  {
+    field: 'workPlace',
+    headerName: 'Place',
+    headerClassName: 'list-view-theme--header',
+    editable: true,
+    type: 'singleSelect',
+    valueOptions: Const.WORKING_PLACE.map(working => {return { label: working.value, value: working.value }}),
+  }
+];
+
 type Props = {
   attendanceList: AttendanceApi.Get.Response[];
   getAttendanceList: typeof getAttendanceList;
 }
 
 function WorkingTable(props: Props) {
-  const classes = useStyles();
-  const { getAttendanceList, attendanceList } = props;
+  const { attendanceList, getAttendanceList } = props;
   const [ attendanceRows, setAttendanceRows ] = React.useState<GridData>({ columns: [], rows: [] });
 
   useEffect(() => {
-    getAttendanceList('2021-05');
+    getAttendanceList(moment().format('yyyy-MM'));
   }, [getAttendanceList]);
 
   useEffect(() => {
@@ -59,25 +102,49 @@ function WorkingTable(props: Props) {
   return (
     <Wrapper>
       <Caption>
-        <ArrowLeft />Works<span>July</span>2021<ArrowRight />
+        <CalendarPicker onBackdropClick={(value) => getAttendanceList(moment(value).format('yyyy-MM'))} />
       </Caption>
-      <ButtonGroup><Export /><Setting /></ButtonGroup>
-      <DataGrid
-        {...attendanceRows}
-        className={classes.root}
-        pageSize={31}
-        rowHeight={32}
-        headerHeight={30}
-        checkboxSelection={false}
-        hideFooter
-        disableSelectionOnClick
-        disableColumnMenu
-      />
+      <ButtonGroup>
+        <ExportButton />
+        <SettingButton />
+      </ButtonGroup>
+      <DataGridContainer>
+        <DataGrid
+          {...attendanceRows}
+          rowCount={attendanceList.length}
+          className={useStyles().root}
+          rowHeight={32}
+          headerHeight={30}
+          checkboxSelection={false}
+          hideFooter
+          disableSelectionOnClick
+          disableColumnMenu
+          showCellRightBorder
+          showColumnRightBorder
+          editMode='row'
+        />
+      </DataGridContainer>
     </Wrapper>
   );
 }
 
-const Caption = styled.h1`
+const Wrapper = styled(Paper)({
+  borderRadius: '2px',
+  padding: '10px 10px',
+  width: '100%',
+  boxSizing: 'border-box',
+  height: '600px'
+})
+
+const DataGridContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 130px);
+  .last-column {
+    min-width: 100%;
+  }
+`;
+
+const Caption = styled.div`
   font-size: 24px;
   text-align: center;
   color: #61667D;
@@ -95,21 +162,25 @@ const Caption = styled.h1`
   }
 `;
 
-const Wrapper = styled(Paper)`
-  height: 800px;
-  width: 1100px;
-  border-radius: 10px;
-  background-color: ${props => props.theme.color.WHITE};
-  padding: 10px 10px 0px;
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
+  padding-right: 10px;
   > svg {
     fill: #797B87;
   }
+`;
+
+const ExportButton = styled(Export)`
+  width: 40px;
+  height: 40px;
+  margin-right: 20px;
+`;
+
+const SettingButton = styled(Setting)`
+  width: 40px;
+  height: 40px;
 `;
 
 export default WorkingTable;

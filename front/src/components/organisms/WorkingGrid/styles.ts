@@ -1,10 +1,12 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
 
 export const useStyles = makeStyles({
   root: {
     border: 0,
-    maxHeight: 670,
-    maxWidth: 980,
+    fontFamily: 'inherit !important',
+    '& .MuiDataGrid-columnHeader': {
+      fontSize: '18px'
+    },
     '& .list-view-theme--header': {
       backgroundColor: '#2999AB',
       color: '#fff',
@@ -20,7 +22,8 @@ export const useStyles = makeStyles({
     },
     '& .MuiDataGrid-cell': {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      fontSize: '1rem'
     },
     '& .MuiDataGrid-row:nth-child(odd)': {
       backgroundColor: '#E5F6F9'

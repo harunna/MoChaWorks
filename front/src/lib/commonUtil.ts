@@ -17,6 +17,24 @@ export namespace Const {
     iPhone = "3"
   }
 
+  export interface ComboBoxItem {
+    id: number;
+    value: string;
+  }
+
+  export const WORKING_PLACE: ComboBoxItem[] = [
+    {id:1, value: "会社"},
+    {id:2, value: "自宅"},
+    {id:3, value: "自宅⇒会社"},
+    {id:4, value: "会社⇒自宅"},
+    {id:5, value: "客先1"},
+    {id:6, value: "客先2"},
+    {id:7, value: "客先3"},
+    {id:8, value: "客先1⇒会社"},
+    {id:9, value: "客先2⇒会社"},
+    {id:10, value: "客先3⇒会社"}
+  ]
+
   export const AWS_SETTINGS = {
     region: 'ap-northeast-1',
     identityPoolId: 'ap-northeast-1:c6ab65fa-239d-4a99-ae8a-4f8658a9595b',

@@ -1,21 +1,24 @@
 import React from 'react';
+import { ThemeProvider } from '@emotion/react'
+import { ThemeProvider as MUIThemeProvider}  from '@mui/material';
 import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { StylesProvider } from '@material-ui/styles';
 import createStore from './store';
-import { ThemeProvider } from 'styled-components';
 import App from './components';
 import theme from './styles';
 import './index.css';
+import { createTheme } from '@mui/material';
 
 const store = createStore();
 
+const muiTheme = createTheme();
+
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <StylesProvider injectFirst>
+  <Provider store={store}>
+    <MUIThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={theme}>
         <App />
-      </StylesProvider>
-    </Provider>
-  </ThemeProvider>
+      </ThemeProvider>
+    </MUIThemeProvider>
+  </Provider>
 , document.getElementById('root'));
