@@ -26,7 +26,7 @@ function CalendarDatePicker(props: Props) {
 
   return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Button onClick={() => setIsOpenCalendar(!isOpenCalendar)} ref={buttonRef} sx={{ fontSize: '30px', fontFamily: 'inherit', fontWeight: 'bold' }}>
+        <Button onClick={() => setIsOpenCalendar(!isOpenCalendar)} ref={buttonRef} sx={{ fontSize: '30px', fontWeight: 'bold' }}>
           {moment(value).format('yyyy MMM')}
         </Button>
         <Modal

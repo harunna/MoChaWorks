@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { ReactComponent as ClockIconSvg } from '../../assets/img/icons/icon-clock4.svg';
+import { ReactComponent as ClockIconSvg } from '../../assets/img/icons/icon-clock.svg';
 import moment from 'moment';
 import { Button, Paper } from '@mui/material';
 
@@ -79,15 +79,20 @@ const AnimateClockIcon = styled(ClockIconSvg)<{ hourDeg: number; minuteDeg: numb
 
 const WorkStartButton = styled(BaseControlButton)`
   background-color: #f9b118;
+  &:hover {
+    background-color: #f9b118;
+  }
 `;
 const RestFinishButton = styled(BaseControlButton)`
   background-color: #14cc5e;
+  &:hover {
+    background-color: #14cc5e;
+  }
 `;
 
 const BoxContent = styled.div`
   font-size: 34px;
   color: white;
-  font-family: inherit;
   &:nth-child(1) { flex: 1; }
   &:nth-child(2) { flex: 3; }
   &:nth-child(3) { flex: 1; }

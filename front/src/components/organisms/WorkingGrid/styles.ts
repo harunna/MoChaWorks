@@ -3,7 +3,6 @@ import { makeStyles } from "@mui/styles";
 export const useStyles = makeStyles({
   root: {
     border: 0,
-    fontFamily: 'inherit !important',
     '& .MuiDataGrid-columnHeader': {
       fontSize: '18px'
     },

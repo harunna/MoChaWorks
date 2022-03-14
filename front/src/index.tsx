@@ -11,7 +11,13 @@ import { createTheme } from '@mui/material';
 
 const store = createStore();
 
-const muiTheme = createTheme();
+const muiTheme = createTheme({
+  typography: {
+    allVariants: {
+      fontFamily: 'Nunito, sans-serif'
+    }
+  }
+});
 
 ReactDOM.render(
   <Provider store={store}>
