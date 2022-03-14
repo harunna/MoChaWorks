@@ -4,6 +4,7 @@ import { ServerConfig } from "../config/config";
  * 共通定数
  */
 export namespace Const {
+  export const APP_NAME = "MoChaWorks";
   export const BASE_ROUTE = ServerConfig.BASE_ROUTE;
   export const PATH_NAME = {
     auth: "/auth",

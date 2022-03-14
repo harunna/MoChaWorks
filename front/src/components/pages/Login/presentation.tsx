@@ -41,14 +41,14 @@ function Login(props: Props) {
   return (
     <Wrapper>
       <Contents>
-        <AppName className="font-effect-emboss">Take<AppIcon/>Mane</AppName>
+        <AppName className="font-effect-emboss">{Const.APP_NAME}</AppName>
         <FormWrap>
-          <StyledTextField placeholder="UserName" onChange={handleChangeUserId}/>
-          <StyledTextField placeholder="Password" onChange={handleChangePassword} type="password"/>
+          <TextField placeholder="UserName" onChange={handleChangeUserId} sx={{'&::placeholder': { fontWeight: 'bold'}}}/>
+          <TextField placeholder="Password" onChange={handleChangePassword} type="password"/>
         </FormWrap>
-        <StyledButton onClick={handleClickLogin} disabled={userId === "" || password === ""}>
+        <LoginButton onClick={handleClickLogin} disabled={userId === "" || password === ""}>
           Login
-        </StyledButton>
+        </LoginButton>
       </Contents>
     </Wrapper>
   );
@@ -63,6 +63,9 @@ const Wrapper = styled.div`
 `;
 
 const Contents = styled.div`
+  padding: 75px 120px;
+  background-color: rgba(255,255,255,0.2);
+  border: solid #fff 2px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -70,7 +73,7 @@ const Contents = styled.div`
   flex-direction: column;
 `;
 
-const StyledTextField = styled(InputBase)`
+const TextField = styled(InputBase)`
   margin-bottom: 20px;
   border: solid 1px;
   padding: 8px;
@@ -79,6 +82,7 @@ const StyledTextField = styled(InputBase)`
   display: block;
   width: 250px;
   padding: 8px 8px 8px 20px;
+  font-size: 20px;
 `;
 
 const FormWrap = styled.div`
@@ -91,27 +95,20 @@ const AppName = styled.h1`
   font-weight: bold;
   margin-bottom: 100px;
   font-size: 45px;
-  font-family: 'Open Sans',sans-serif;
   display: flex;
-  align-items: inherit;
 `;
 
-const AppIcon = styled(HomeIcon)`
-  width: 45px;
-  height: 45px;
-  margin: 0px 10px;
-  fill: #025;
-`;
-
-const StyledButton = styled(Button)`
-  background-color: #B8BCD2;
+const LoginButton = styled(Button)`
+  background-color: #DA1;
   font-weight: bold;
   color: #fff;
   width: 150px;
   height: 45px;
-
   &:hover {
-    background-color: #025;
+    background-color: #DA1;
+  }
+  &:disabled {
+    background-color: #B8BCD2;
   }
 `;
 
