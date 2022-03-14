@@ -1,27 +1,44 @@
+import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { AxiosResponse } from "axios"
 import moment from "moment"
 import { ThunkAction } from "."
-import { storage } from "../lib/commonUtil"
-import { WebApi } from "../lib/webApi"
+// import { WorkingGridColumns } from "../components/organisms/WorkingGrid/presentaion";
+import { Const, storage } from "../lib/commonUtil"
+import { WebApi } from "../lib/webApi";
+
+export type DataRowModel = {
+  id: GridRowId;
+  workDate: string;
+  workStart: string;
+  workEnd: string;
+  workOver: string;
+  workTotal: string;
+  workPlace: string;
+}
+
+export interface GridData {
+  columns: GridColDef[];
+  rows: DataRowModel[];
+}
 
 export interface AttendanceState {
-  attendanceList: AttendanceApi.Get.Response[];
+  workingList: GridData | null;
   month: string;
 }
 
 const initialState: AttendanceState = {
-  attendanceList: [],
+  workingList: null,
   month: moment().format('yyyy-MM')
 }
 
 interface FetchAttendanceListSuccess {
   type: 'ATTENDANCE__GET_ATTENDANCE_LIST_SUCCESS',
   payload: {
-    data: AttendanceApi.Get.Response[]
+    data: GridData
   }
 }
 
-function fetchSuccessGetAttendanceList(data: AttendanceApi.Get.Response[]): FetchAttendanceListSuccess {
+function fetchSuccessGetAttendanceList(data: GridData): FetchAttendanceListSuccess {
   return {
     type: 'ATTENDANCE__GET_ATTENDANCE_LIST_SUCCESS',
     payload: {
@@ -30,6 +47,49 @@ function fetchSuccessGetAttendanceList(data: AttendanceApi.Get.Response[]): Fetc
   }
 }
 
+const WorkingGridColumns: GridColDef[] = [
+  { 
+    field: 'workDate',
+    headerName: 'WorkDate',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 180,
+  },
+  {
+    field: 'workStart',
+    headerName: 'Start',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 180,
+    editable: true,
+  },
+  {
+    field: 'workEnd',
+    headerName: 'End',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+    editable: true,
+  },
+  {
+    field: 'workOver',
+    headerName: 'Over',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+  },
+  {
+    field: 'workTotal',
+    headerName: 'Total',
+    headerClassName: 'list-view-theme--header',
+    minWidth: 150,
+  },
+  {
+    field: 'workPlace',
+    headerName: 'Place',
+    headerClassName: 'list-view-theme--header',
+    editable: true,
+    type: 'singleSelect',
+    flex: 1,
+    valueOptions: Const.WORKING_PLACE.map(working => {return { label: working.value, value: working.value }}),
+  }
+];
 
 /**
  * 1か月分の勤務リストを取得する
@@ -41,9 +101,27 @@ export function getAttendanceList(month: string): ThunkAction<FetchAttendanceLis
       if (!storage.userId) { return ;}
       const params: AttendanceApi.Get.Request = { user_id: storage.userId, month: month };
       const response: AxiosResponse<AttendanceApi.Get.Response[]> = await WebApi.getAttendanceList(dispatch, params);
-      dispatch(fetchSuccessGetAttendanceList(response.data))
+
+      dispatch(fetchSuccessGetAttendanceList(createAttendanceRows(response.data)));
     } catch(err) {
     }
+  }
+}
+
+function createAttendanceRows(workingList: AttendanceApi.Get.Response[]): GridData {
+  return {
+    columns: WorkingGridColumns,
+    rows: workingList.map(list => {
+      return {
+        id: list.work_date,
+        workDate: list.work_date,
+        workStart: list.work_record.start,
+        workEnd: list.work_record.end,
+        workOver: list.overtime,
+        workTotal: list.total,
+        workPlace: list.work_record.place
+      }
+    })
   }
 }
 
@@ -54,7 +132,7 @@ export default (state: AttendanceState = initialState, action: Action): Attendan
     case 'ATTENDANCE__GET_ATTENDANCE_LIST_SUCCESS':
       return {
         ...state,
-        attendanceList: action.payload.data
+        workingList: action.payload.data
       }
 
     default:

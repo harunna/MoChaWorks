@@ -9,7 +9,7 @@ import { Modal } from '@mui/material';
 import { DatePicker } from '@mui/lab';
 
 type Props = {
-  onBackdropClick?: (value: Date | null) => void;
+  onChangeMonth?: (value: Date | null) => void;
 }
 
 function CalendarDatePicker(props: Props) {
@@ -19,14 +19,25 @@ function CalendarDatePicker(props: Props) {
 
   const onBackdropClick = () => {
     setIsOpenCalendar(false);
-    if (props.onBackdropClick) {
-      props.onBackdropClick(value);
+    onChangeMonth(value);
+  }
+
+  const onChangeMonth = (date: Date | null) => {
+    if (value?.getMonth() !== date?.getMonth()) {
+      setIsOpenCalendar(false);
+      if (props.onChangeMonth) {
+        props.onChangeMonth(date);
+      }
     }
   }
 
   return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Button onClick={() => setIsOpenCalendar(!isOpenCalendar)} ref={buttonRef} sx={{ fontSize: '30px', fontWeight: 'bold' }}>
+        <Button
+          ref={buttonRef}
+          onClick={() => setIsOpenCalendar(!isOpenCalendar)}
+          sx={{ fontSize: '30px', fontWeight: 'bold', color: '#19778E' }}
+        >
           {moment(value).format('yyyy MMM')}
         </Button>
         <Modal
@@ -47,6 +58,7 @@ function CalendarDatePicker(props: Props) {
               LeftArrowIcon: ArrowLeft,
               RightArrowIcon: ArrowRight
             }}
+            onMonthChange={(value) => onChangeMonth(value)}
             renderInput={() => (
               <></>
             )}

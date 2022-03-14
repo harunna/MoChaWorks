@@ -8,7 +8,6 @@ import { login } from '../../../reducers/auth';
 import { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Const } from '../../../lib/commonUtil';
-import { ReactComponent as HomeIcon } from '../../../assets/img/icons/icon-home.svg';
 
 type Props = RouteComponentProps<{}> & {
   login: typeof login;

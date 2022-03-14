@@ -34,7 +34,7 @@ function ClockBox() {
   return (
     <Wrapper>
       <BoxContent>
-        <AnimateClockIcon hourDeg={curculateHourDeg()} minuteDeg={curculateMinuteDeg()} />
+        <AnimateClockIcon hourdeg={curculateHourDeg()} minutedeg={curculateMinuteDeg()} />
       </BoxContent>
       <BoxContent>
         <DateTimeText>{current.format('YYYY年MM月DD日')}</DateTimeText>
@@ -65,16 +65,16 @@ const BaseControlButton = styled(Button)`
   min-height: 60px;
   font-size: 16px;
   
-  &:first-child {
+  &:first-of-type {
     margin-bottom: 10px;
   }
 `;
 
-const AnimateClockIcon = styled(ClockIconSvg)<{ hourDeg: number; minuteDeg: number }>`
+const AnimateClockIcon = styled(ClockIconSvg)<{ hourdeg: number; minutedeg: number }>`
   width: 220px;
   height: 125px;
-  .hour-hand { transform: rotate(${({ hourDeg }) => `${hourDeg}deg`}); }
-  .minute-hand { transform: rotate(${({ minuteDeg }) => `${minuteDeg}deg`}); }
+  .hour-hand { transform: rotate(${({ hourdeg }) => `${hourdeg}deg`}); }
+  .minute-hand { transform: rotate(${({ minutedeg }) => `${minutedeg}deg`}); }
 `;
 
 const WorkStartButton = styled(BaseControlButton)`
@@ -93,9 +93,9 @@ const RestFinishButton = styled(BaseControlButton)`
 const BoxContent = styled.div`
   font-size: 34px;
   color: white;
-  &:nth-child(1) { flex: 1; }
-  &:nth-child(2) { flex: 3; }
-  &:nth-child(3) { flex: 1; }
+  &:nth-of-type(1) { flex: 1; }
+  &:nth-of-type(2) { flex: 3; }
+  &:nth-of-type(3) { flex: 1; }
 `;
 
 const DateTimeText = styled.div`
