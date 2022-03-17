@@ -15,21 +15,39 @@ export namespace WebApi {
 
   namespace Endpoints {
     export const GET_ATTENDANCE_LIST: Endpoint = { url: "/list" }
+    export const POST_ATTENDANCE_LIST: Endpoint = { url: "/list" }
+    export const PUT_ATTENDANCE_LIST: Endpoint = { url: "/list" }
   }
 
   export function getAttendanceList(dispatch: Dispatch, params: AttendanceApi.Get.Request) {
     const { url } = Endpoints.GET_ATTENDANCE_LIST;
-    const concatUrl = `${url}?user_id=${params.user_id}&month=${params.month}`;
+    const concatUrl = `${url}?userId=${params.userId}&month=${params.month}`;
     return get<{}, AttendanceApi.Get.Response[]>(dispatch, {}, concatUrl);
   }
 
-  function get<P, R>(dispatch: Dispatch, params: P, url: string) {
+  export function postAttendance(dispatch: Dispatch | null, params: AttendanceApi.Post.Request) {
+    const { url } = Endpoints.POST_ATTENDANCE_LIST;
+    const concatUrl = `${url}/${params.userId}/${params.workDate}`;
+    return post<{}, AttendanceApi.Post.Response[]>(dispatch, params, concatUrl);
+  }
+
+  export function putAttendance(dispatch: Dispatch, params: AttendanceApi.Put.Request) {
+    const { url } = Endpoints.POST_ATTENDANCE_LIST;
+    const concatUrl = `${url}/${params.userId}/${params.workDate}`;
+    return put<{}, AttendanceApi.Put.Response[]>(dispatch, params, concatUrl);
+  }
+
+  function get<P, R>(dispatch: Dispatch | null, params: P, url: string) {
     return sendRequest<R>('get', params,  url, dispatch);
   }
 
-  // function post<P, R>(dispatch: Dispatch, params: P, url: string) {
-  //   return sendRequest<R>('post', params, url, dispatch);
-  // }
+  function post<P, R>(dispatch: Dispatch | null, params: P, url: string) {
+    return sendRequest<R>('post', params, url, dispatch);
+  }
+
+  function put<P, R>(dispatch: Dispatch | null, params: P, url: string) {
+    return sendRequest<R>('put', params, url, dispatch);
+  }
 
   /**
    * WebApi共通リクエスター
@@ -39,7 +57,7 @@ export namespace WebApi {
    * @param dispatch 
    */
   function sendRequest<T>(
-    method: 'post' | 'get',
+    method: 'post' | 'get' | 'put',
     params: {},
     url: string,
     dispatch: Dispatch| null, // 通知出力用
@@ -48,7 +66,7 @@ export namespace WebApi {
       let requestData = {};
       let requestParams = {};
 
-      if (method === 'post') {
+      if (method === 'post' || method === 'put') {
         requestData = params;
       } else {
         requestParams = params

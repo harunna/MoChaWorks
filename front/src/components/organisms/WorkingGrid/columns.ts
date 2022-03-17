@@ -1,13 +1,14 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { Button } from 'aws-sdk/clients/lexruntime';
 import { Const } from '../../../lib/commonUtil';
-import  SelectBox from '../../atoms/SelectBox';
 
-export const WorkingGridColumns: GridColDef[] = [
-  { 
+export let WorkingGridColumns: GridColDef[] = [
+  {
     field: 'workDate',
     headerName: 'WorkDate',
     minWidth: 180,
+    valueGetter: (params) => {
+      return params.row.workDate
+    }
   },
   {
     field: 'workStart',
@@ -25,7 +26,9 @@ export const WorkingGridColumns: GridColDef[] = [
     field: 'workOver',
     headerName: 'Over',
     minWidth: 150,
-    editable: true,
+    valueGetter: () => {
+
+    }
   },
   {
     field: 'workTotal',
@@ -37,6 +40,7 @@ export const WorkingGridColumns: GridColDef[] = [
     headerName: 'Place',
     editable: true,
     type: 'singleSelect',
-    // valueOptions: Const.WORKING_PLACE.map(working => {return { label: working.value, value: working.value }}),
+    flex: 1,
+    valueOptions: Const.WORKING_PLACE.map(working => {return { label: working.value, value: working.value }}),
   }
 ];

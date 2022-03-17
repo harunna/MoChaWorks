@@ -1,26 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import ClockBox from '../../molecules/ClockBox';
 import WorkingGrid from '../WorkingGrid';
 import CalendarPicker from '../../molecules/CalendarPicker';
 import { ReactComponent as Setting } from '../../../assets/img/icons/icon-settings.svg';
 import { ReactComponent as Export } from '../../../assets/img/icons/icon-export.svg';
-import { getAttendanceList, GridData } from '../../../reducers/attendance';
+import { getAttendanceList } from '../../../reducers/attendance';
 import moment from 'moment';
 import { Paper } from '@mui/material';
 
-type Props = {
-  workingList: GridData | null;
-  getAttendanceList: typeof getAttendanceList;
-}
-
-function Attendance(props: Props) {
-  const { getAttendanceList, workingList } = props;
-
-  useEffect(() => {
-    getAttendanceList(moment().format('yyyy-MM'));
-  }, [getAttendanceList]);
-  
+function Attendance() {
   return (
     <Wrapper terminalCat="1">
       <BoxContainer>
@@ -36,7 +25,7 @@ function Attendance(props: Props) {
           <ExportButton />
           <SettingButton />
         </ButtonGroup>
-        {workingList && <WorkingGrid workingList={workingList} />}
+        <WorkingGrid />
       </WorkingGridContainer>
     </Wrapper>
   );

@@ -21,7 +21,7 @@ function ClockBox() {
     const currentHour = current.hours();
     const currentMinute = current.minutes();
     const deg1hour = 360 / 12;
-    const deg1minute = 15 / 60;
+    const deg1minute = 30 / 60;
     return currentHour * deg1hour + currentMinute * deg1minute;
   }
 

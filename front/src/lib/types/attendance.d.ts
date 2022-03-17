@@ -1,13 +1,13 @@
 namespace AttendanceApi.Get {
   interface Request {
-    user_id: string,
+    userId: string,
     month: string
   }
 
   interface Response {
-    user_id: string;
-    work_date: string;
-    work_record: {
+    userId: string;
+    workDate: string;
+    workRecord: {
       start: string;
       end: string;
       place: string;
@@ -15,4 +15,35 @@ namespace AttendanceApi.Get {
     total: string;
     overtime: string;
   }
+}
+
+namespace AttendanceApi.Post {
+  interface Request {
+    userId: string;
+    workDate: string;
+    workRecord: {
+      start: string;
+      end: string;
+      place: string;
+    }
+    total: string;
+    overtime: string;
+  }
+
+  interface Response {}
+}
+
+namespace AttendanceApi.Put {
+  interface Request {
+    userId: string;
+    workDate: string;
+    workRecord: {
+      start: string;
+      end: string;
+      place: string;
+    }
+    total: string;
+    overtime: string;
+  }
+  interface Response {}
 }
