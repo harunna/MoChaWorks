@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridEventListener, GridEvents, GridRowId, MuiBaseEvent, MuiEvent } from '@mui/x-data-grid';
-import { DataRowModel, getAttendanceList, GridData, postAttendance } from '../../../reducers/attendance';
+import { DataGrid, GridEditRowsModel, GridRowParams, MuiBaseEvent, MuiEvent } from '@mui/x-data-grid';
+import { getAttendanceList, GridData, postAttendance } from '../../../reducers/attendance';
 import styled from '@emotion/styled';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -13,33 +13,29 @@ type Props = {
 
 function WorkingGrid(props: Props) {
   const { workingList, getAttendanceList, postAttendance } = props;
-  const [ editRow, setEditRow ] = useState<DataRowModel>({
-    id: "",
-    workDate: "",
-    workStart: "",
-    workEnd: "",
-    workOver: "",
-    workTotal: "",
-    workPlace: ""
-  })
+  const [ editRowModel, setEditRowsModel] = useState<GridEditRowsModel>();
 
   useEffect(() => {
     getAttendanceList(moment().format('yyyy-MM'));
   }, [getAttendanceList]);
 
-  const onRowEditCommit = (id: GridRowId, event: MuiEvent<MuiBaseEvent>) => {
-    const target = workingList.rows.find(row => row.id === id);
-    if (!target) return;
-    postAttendance({...target, ...editRow });
+  const onRowEditStop = (params: GridRowParams, event: MuiEvent<MuiBaseEvent>) => {
+    if (editRowModel) {
+      postAttendance({
+        id: params.id,
+        workDate: params.row.workDate,
+        workStart: editRowModel[params.id].workStart.value as string,
+        workEnd: editRowModel[params.id].workEnd.value as string,
+        workOver: "",
+        workTotal: "",
+        workPlace: editRowModel[params.id].workPlace.value as string,
+      })
+    }
   }
 
-  const onEditCellPropsChange: GridEventListener<GridEvents.editCellPropsChange> = (params, event) => {
-    const { field, id, props } = params;
-    let newState: any = {};
-    newState[field] = props.value;
-    newState.workDate = id;
-    setEditRow({...editRow, ...newState});
-  }
+  const onEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
+    setEditRowsModel(model);
+  }, []);
 
   return (
     <Container>
@@ -48,8 +44,8 @@ function WorkingGrid(props: Props) {
         rows={workingList.rows}
         columns={workingList.columns}
         checkboxSelection={false}
-        onRowEditCommit={onRowEditCommit}
-        onEditCellPropsChange={onEditCellPropsChange}
+        onRowEditStop={onRowEditStop}
+        onEditRowsModelChange={onEditRowsModelChange}
         disableSelectionOnClick
         hideFooter
         showCellRightBorder
@@ -68,6 +64,12 @@ const Container = styled.div`
   .working-column-header {
     background-color: #AAA;
     color: ${props => props.theme.color.WHITE};
+  }
+  .css-1062sh2-MuiDataGrid-root
+  .MuiDataGrid-virtualScrollerContent--overflowed
+  .MuiDataGrid-row--lastVisible
+  .MuiDataGrid-cell {
+    border-right-color: rgba(224, 224, 224, 1);
   }
 `;
 export default WorkingGrid;

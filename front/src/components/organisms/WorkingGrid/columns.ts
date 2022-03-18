@@ -5,16 +5,13 @@ export let WorkingGridColumns: GridColDef[] = [
   {
     field: 'workDate',
     headerName: 'WorkDate',
-    minWidth: 180,
-    valueGetter: (params) => {
-      return params.row.workDate
-    }
+    minWidth: 180
   },
   {
     field: 'workStart',
     headerName: 'Start',
     minWidth: 180,
-    editable: true,
+    editable: true
   },
   {
     field: 'workEnd',
@@ -25,10 +22,7 @@ export let WorkingGridColumns: GridColDef[] = [
   {
     field: 'workOver',
     headerName: 'Over',
-    minWidth: 150,
-    valueGetter: () => {
-
-    }
+    minWidth: 150
   },
   {
     field: 'workTotal',

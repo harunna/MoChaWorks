@@ -41,9 +41,25 @@ interface FetchGetAttendanceListSuccess {
   }
 }
 
+interface FetchPostAttendanceSuccess {
+  type: 'ATTENDANCE__POST_ATTENDANCE_LIST_SUCCESS',
+  payload: {
+    data: DataRowModel[]
+  }
+}
+
 function fetchSuccessGetAttendanceList(data: GridData): FetchGetAttendanceListSuccess {
   return {
     type: 'ATTENDANCE__GET_ATTENDANCE_LIST_SUCCESS',
+    payload: {
+      data
+    }
+  }
+}
+
+function fetchSuccessPostAttendance(data: DataRowModel[]): FetchPostAttendanceSuccess {
+  return {
+    type: 'ATTENDANCE__POST_ATTENDANCE_LIST_SUCCESS',
     payload: {
       data
     }
@@ -88,8 +104,8 @@ function createAttendanceRows(workingList: AttendanceApi.Get.Response[]): GridDa
  * 勤怠情報を登録する
  * @param params 
  */
-export function postAttendance(gridData: DataRowModel) {
-  return async () => {
+export function postAttendance(gridData: DataRowModel): ThunkAction<FetchPostAttendanceSuccess> {
+  return async (dispatch, getState) => {
     if (!storage.userId) { return ;}
     const params: AttendanceApi.Post.Request = {
       userId: storage.userId,
@@ -102,16 +118,23 @@ export function postAttendance(gridData: DataRowModel) {
       total: gridData.workTotal,
       overtime: gridData.workOver
     }
+    
     try {
-      const response = await WebApi.postAttendance(null, params);
-      
+      await WebApi.postAttendance(dispatch, params);
+      const workingList = getState().attendance.workingList;
+      const editRowIndex = workingList.rows.findIndex((row) => row.id === gridData.id);
+      if (editRowIndex > -1) {
+        let newRows = [ ...workingList.rows ];
+        newRows[editRowIndex] = gridData;
+        dispatch(fetchSuccessPostAttendance(newRows));
+      }
     } catch(e) {
       console.error(e);
     }
   }
 }
 
-type Action = FetchGetAttendanceListSuccess;
+type Action = FetchGetAttendanceListSuccess | FetchPostAttendanceSuccess;
 
 export default (state: AttendanceState = initialState, action: Action): AttendanceState => {
   switch(action.type) {
@@ -120,6 +143,15 @@ export default (state: AttendanceState = initialState, action: Action): Attendan
         ...state,
         workingList: {
           ...action.payload.data
+        }
+      }
+
+    case 'ATTENDANCE__POST_ATTENDANCE_LIST_SUCCESS':
+      return {
+        ...state,
+        workingList: {
+          ...state.workingList,
+          rows: action.payload.data
         }
       }
 
