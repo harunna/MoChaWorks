@@ -1,6 +1,6 @@
 import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { AxiosResponse } from "axios"
-import moment from "moment"
+import dayjs from "dayjs"
 import { ThunkAction } from "."
 import { WorkingGridColumns } from "../lib/workingGridColumns";
 import { storage } from "../lib/commonUtil"
@@ -31,7 +31,7 @@ const initialState: AttendanceState = {
     columns: [],
     rows: []
   },
-  month: moment().format('yyyy-MM')
+  month: dayjs().format('YYYY-MM')
 }
 
 interface FetchGetAttendanceListSuccess {
@@ -68,7 +68,7 @@ function fetchSuccessPostAttendance(data: DataRowModel[]): FetchPostAttendanceSu
 
 /**
  * 1か月分の勤務リストを取得する
- * @param month  yyyy-mm
+ * @param month  YYYY-MM
  */
 export function getAttendanceList(month: string): ThunkAction<FetchGetAttendanceListSuccess> {
   return async (dispatch) => {
@@ -76,7 +76,7 @@ export function getAttendanceList(month: string): ThunkAction<FetchGetAttendance
       if (!storage.userId) { return; }
       const params: AttendanceApi.Get.Request = { userId: storage.userId, month: month };
       const response: AxiosResponse<AttendanceApi.Get.Response[]> = await WebApi.getAttendanceList(dispatch, params);
-      // const todayRecord = response.data.find(list => list.workDate === moment().format('YYYY-MM-DD'));
+      // const todayRecord = response.data.find(list => list.workDate === dayjs().format('YYYY-MM-DD'));
       dispatch(fetchSuccessGetAttendanceList(createAttendanceRows(response.data)));
     } catch(err) {
     }

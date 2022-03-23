@@ -4,7 +4,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Button from '@mui/material/Button';
 import { ReactComponent as ArrowLeft } from '../../assets/img/icons/icon-arrow-left.svg';
 import { ReactComponent as ArrowRight } from '../../assets/img/icons/icon-arrow-right.svg';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Modal } from '@mui/material';
 import { DatePicker } from '@mui/lab';
 
@@ -38,7 +38,7 @@ function CalendarDatePicker(props: Props) {
           onClick={() => setIsOpenCalendar(!isOpenCalendar)}
           sx={{ fontSize: '30px', fontWeight: 'bold', color: '#19778E' }}
         >
-          {moment(value).format('yyyy MMM')}
+          {dayjs(value).format('YYYY MMM')}
         </Button>
         <Modal
           open={isOpenCalendar}

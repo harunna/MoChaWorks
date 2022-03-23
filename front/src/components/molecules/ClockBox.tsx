@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { ReactComponent as ClockIconSvg } from '../../assets/img/icons/icon-clock.svg';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Button, Paper } from '@mui/material';
 
 type Props = {
   isWorkStart: boolean;
   isRestStart: boolean;
-  handleClickWorkButton: (current: moment.Moment) => void;
-  handleClickRestButton: (current: moment.Moment) => void;
+  handleClickWorkButton: (current: dayjs.Dayjs) => void;
+  handleClickRestButton: (current: dayjs.Dayjs) => void;
 }
 
 function ClockBox(props: Props) {
   const { handleClickWorkButton, handleClickRestButton } = props;
-  const [current, setCurrentTime] = useState<moment.Moment>(moment());
+  const [current, setCurrentTime] = useState<dayjs.Dayjs>(dayjs());
 
   const timerCallback = () => {
-    setCurrentTime(moment());
+    setCurrentTime(dayjs());
   }
   
   useEffect(() => {
@@ -26,8 +26,8 @@ function ClockBox(props: Props) {
   }, []);
 
   const curculateHourDeg = (): number => {
-    const currentHour = current.hours();
-    const currentMinute = current.minutes();
+    const currentHour = current.hour();
+    const currentMinute = current.minute();
     const deg1hour = 360 / 12;
     const deg1minute = 30 / 60;
     return currentHour * deg1hour + currentMinute * deg1minute;

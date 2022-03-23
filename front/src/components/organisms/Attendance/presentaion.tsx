@@ -6,7 +6,7 @@ import { ReactComponent as Setting } from '../../../assets/img/icons/icon-settin
 import { ReactComponent as Export } from '../../../assets/img/icons/icon-export.svg';
 import { AttendanceState } from '../../../reducers/attendance';
 import * as attendanceActions from '../../../reducers/attendance';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Paper } from '@mui/material';
 import { DataGrid, GridEditRowsModel, GridRowParams, MuiBaseEvent, MuiEvent } from '@mui/x-data-grid';
 
@@ -20,7 +20,7 @@ function Attendance(props: Props) {
   const [ editRowModel, setEditRowsModel] = useState<GridEditRowsModel>();
 
   useEffect(() => {
-    getAttendanceList(moment().format('yyyy-MM'));
+    getAttendanceList(dayjs().format('YYYY-MM'));
   }, [getAttendanceList]);
 
   const handleRowEditStop = (params: GridRowParams, event: MuiEvent<MuiBaseEvent>) => {
@@ -41,13 +41,13 @@ function Attendance(props: Props) {
     setEditRowsModel(model);
   }, []);
 
-  const handleClickWorkButton = (current: moment.Moment) => {
-    const todayRecord = workingList.rows.find(list => list.workDate === moment().format('YYYY-MM-DD'));
+  const handleClickWorkButton = (current: dayjs.Dayjs) => {
+    const todayRecord = workingList.rows.find(list => list.workDate === dayjs().format('YYYY-MM-DD'));
     if (!todayRecord) return;
 
     props.postAttendance({
-      id: current.format('yyyy-MM-DD'),
-      workDate: current.format('yyyy-MM-DD'),
+      id: current.format('YYYY-MM-DD'),
+      workDate: current.format('YYYY-MM-DD'),
       workStart: todayRecord.workStart,
       workEnd: todayRecord.workEnd,
       workOver: "",
@@ -56,7 +56,7 @@ function Attendance(props: Props) {
     })
   }
 
-  const handleClickRestButton = (current: moment.Moment) => {}
+  const handleClickRestButton = (current: dayjs.Dayjs) => {}
 
   return (
     <Wrapper terminalCat="1">
@@ -70,7 +70,7 @@ function Attendance(props: Props) {
       </BoxContainer>
       <WorkingGridContainer>
         <Caption>
-          <CalendarPicker onChangeMonth={(value) => getAttendanceList(moment(value).format('yyyy-MM'))}/>
+          <CalendarPicker onChangeMonth={(value) => getAttendanceList(dayjs(value).format('YYYY-MM'))}/>
         </Caption>
         <ButtonGroup>
           <ExportButton />
