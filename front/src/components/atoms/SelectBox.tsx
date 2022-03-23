@@ -12,6 +12,7 @@ type Props = {
 
 function SelectBox(props: Props) {
   const { value, options, handleChange, displayEmpty, minWidth } = props;
+
   return (
     <FormControl sx={{ m: 1, minWidth: minWidth ? minWidth : 130 }}>
       <Select
@@ -21,7 +22,12 @@ function SelectBox(props: Props) {
       >
         {displayEmpty ? <MenuItem value=""></MenuItem> : ""}
         {options.map((option) => 
-          <MenuItem value={option.value}>{option.label}</MenuItem>
+          <MenuItem
+            key={option.value}
+            value={option.value}
+          >
+              {option.label}
+          </MenuItem>
         )}
       </Select>
     </FormControl>

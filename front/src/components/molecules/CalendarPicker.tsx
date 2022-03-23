@@ -23,7 +23,7 @@ function CalendarDatePicker(props: Props) {
   }
 
   const onChangeMonth = (date: Date | null) => {
-    if (value?.getMonth() !== date?.getMonth()) {
+    if (value !== date) {
       setIsOpenCalendar(false);
       if (props.onChangeMonth) {
         props.onChangeMonth(date);

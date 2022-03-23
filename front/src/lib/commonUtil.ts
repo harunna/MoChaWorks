@@ -19,22 +19,24 @@ export namespace Const {
   }
 
   export interface ComboBoxItem {
-    id: number;
-    value: string;
+    value: number;
+    label: string;
   }
 
   export const WORKING_PLACE: ComboBoxItem[] = [
-    {id:1, value: "会社"},
-    {id:2, value: "自宅"},
-    {id:3, value: "自宅⇒会社"},
-    {id:4, value: "会社⇒自宅"},
-    {id:5, value: "客先1"},
-    {id:6, value: "客先2"},
-    {id:7, value: "客先3"},
-    {id:8, value: "客先1⇒会社"},
-    {id:9, value: "客先2⇒会社"},
-    {id:10, value: "客先3⇒会社"}
-  ]
+    {value:1, label: "会社"},
+    {value:2, label: "自宅"},
+    {value:3, label: "自宅⇒会社"},
+    {value:4, label: "会社⇒自宅"},
+    {value:5, label: "客先1"},
+    {value:6, label: "客先2"},
+    {value:7, label: "客先3"},
+    {value:8, label: "客先1⇒会社"},
+    {value:9, label: "客先2⇒会社"},
+    {value:10, label: "客先⇒会社"}
+  ];
+
+  export const BASIC_WORK_HOURS = 9;
 
   export const AWS_SETTINGS = {
     region: 'ap-northeast-1',

@@ -4,8 +4,16 @@ import { ReactComponent as ClockIconSvg } from '../../assets/img/icons/icon-cloc
 import moment from 'moment';
 import { Button, Paper } from '@mui/material';
 
-function ClockBox() {
-  const [current, setCurrentTime] = useState(moment());
+type Props = {
+  isWorkStart: boolean;
+  isRestStart: boolean;
+  handleClickWorkButton: (current: moment.Moment) => void;
+  handleClickRestButton: (current: moment.Moment) => void;
+}
+
+function ClockBox(props: Props) {
+  const { handleClickWorkButton, handleClickRestButton } = props;
+  const [current, setCurrentTime] = useState<moment.Moment>(moment());
 
   const timerCallback = () => {
     setCurrentTime(moment());
@@ -31,6 +39,14 @@ function ClockBox() {
     return currentMinute * deg1minute;
   }
 
+  const onClickWorkButton = () => {
+    handleClickWorkButton(current);
+  }
+
+  const onClickRestButton = () => {
+    handleClickRestButton(current);
+  }
+
   return (
     <Wrapper>
       <BoxContent>
@@ -41,8 +57,14 @@ function ClockBox() {
         <HourTimeText>{current.format('HH:mm:ss')}</HourTimeText>
       </BoxContent>
       <BoxContent>
-        <WorkStartButton variant='contained'>Job Start!</WorkStartButton>
-        <RestFinishButton variant="contained">Rest Start!</RestFinishButton>
+        <ButtonWrapper>
+          <WorkButton onClick={onClickWorkButton} variant='contained'>Work Start</WorkButton>
+          <WorkButton onClick={onClickWorkButton} variant='contained'>Work End</WorkButton>
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <RestButton onClick={onClickRestButton} variant="contained">Rest Start</RestButton>
+          <RestButton onClick={onClickRestButton} variant="contained">Rest End</RestButton>
+        </ButtonWrapper>
       </BoxContent>
     </Wrapper>
   )
@@ -59,17 +81,6 @@ const Wrapper = styled(Paper)`
   align-items: center;
 `;
 
-const BaseControlButton = styled(Button)`
-  display: block;
-  min-width: 170px;
-  min-height: 60px;
-  font-size: 16px;
-  
-  &:first-of-type {
-    margin-bottom: 10px;
-  }
-`;
-
 const AnimateClockIcon = styled(ClockIconSvg)<{ hourdeg: number; minutedeg: number }>`
   width: 220px;
   height: 125px;
@@ -77,25 +88,48 @@ const AnimateClockIcon = styled(ClockIconSvg)<{ hourdeg: number; minutedeg: numb
   .minute-hand { transform: rotate(${({ minutedeg }) => `${minutedeg}deg`}); }
 `;
 
-const WorkStartButton = styled(BaseControlButton)`
+const BoxContent = styled.div`
+  font-size: 34px;
+  color: white;
+  padding-right: 40px;
+  &:nth-of-type(1) { flex: 1; }
+  &:nth-of-type(2) { flex: 3; }
+  &:nth-of-type(3) { flex: 1; }
+`;
+
+const BaseControlButton = styled(Button)`
+  display: block;
+  min-width: 170px;
+  min-height: 60px;
+  font-size: 16px;
+`;
+
+const WorkButton = styled(BaseControlButton)`
   background-color: #f9b118;
   &:hover {
     background-color: #f9b118;
   }
+  &:first-of-type {
+    margin-right: 15px;
+  }
 `;
-const RestFinishButton = styled(BaseControlButton)`
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  &:first-of-type {
+    margin-bottom: 10px;
+  }
+`;
+
+const RestButton = styled(BaseControlButton)`
   background-color: #14cc5e;
   &:hover {
     background-color: #14cc5e;
   }
-`;
 
-const BoxContent = styled.div`
-  font-size: 34px;
-  color: white;
-  &:nth-of-type(1) { flex: 1; }
-  &:nth-of-type(2) { flex: 3; }
-  &:nth-of-type(3) { flex: 1; }
+  &:first-of-type {
+    margin-right: 15px;
+  }
 `;
 
 const DateTimeText = styled.div`

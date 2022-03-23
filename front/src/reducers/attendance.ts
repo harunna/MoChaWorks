@@ -2,7 +2,7 @@ import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { AxiosResponse } from "axios"
 import moment from "moment"
 import { ThunkAction } from "."
-import { WorkingGridColumns } from "../components/organisms/WorkingGrid/columns";
+import { WorkingGridColumns } from "../lib/workingGridColumns";
 import { storage } from "../lib/commonUtil"
 import { WebApi } from "../lib/webApi";
 
@@ -44,7 +44,7 @@ interface FetchGetAttendanceListSuccess {
 interface FetchPostAttendanceSuccess {
   type: 'ATTENDANCE__POST_ATTENDANCE_LIST_SUCCESS',
   payload: {
-    data: DataRowModel[]
+    data: DataRowModel[];
   }
 }
 
@@ -76,7 +76,7 @@ export function getAttendanceList(month: string): ThunkAction<FetchGetAttendance
       if (!storage.userId) { return; }
       const params: AttendanceApi.Get.Request = { userId: storage.userId, month: month };
       const response: AxiosResponse<AttendanceApi.Get.Response[]> = await WebApi.getAttendanceList(dispatch, params);
-
+      // const todayRecord = response.data.find(list => list.workDate === moment().format('YYYY-MM-DD'));
       dispatch(fetchSuccessGetAttendanceList(createAttendanceRows(response.data)));
     } catch(err) {
     }
@@ -118,7 +118,7 @@ export function postAttendance(gridData: DataRowModel): ThunkAction<FetchPostAtt
       total: gridData.workTotal,
       overtime: gridData.workOver
     }
-    
+
     try {
       await WebApi.postAttendance(dispatch, params);
       const workingList = getState().attendance.workingList;
@@ -126,6 +126,7 @@ export function postAttendance(gridData: DataRowModel): ThunkAction<FetchPostAtt
       if (editRowIndex > -1) {
         let newRows = [ ...workingList.rows ];
         newRows[editRowIndex] = gridData;
+
         dispatch(fetchSuccessPostAttendance(newRows));
       }
     } catch(e) {

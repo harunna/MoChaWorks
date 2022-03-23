@@ -1,31 +1,97 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import ClockBox from '../../molecules/ClockBox';
-import WorkingGrid from '../WorkingGrid';
 import CalendarPicker from '../../molecules/CalendarPicker';
 import { ReactComponent as Setting } from '../../../assets/img/icons/icon-settings.svg';
 import { ReactComponent as Export } from '../../../assets/img/icons/icon-export.svg';
-import { getAttendanceList } from '../../../reducers/attendance';
+import { AttendanceState } from '../../../reducers/attendance';
+import * as attendanceActions from '../../../reducers/attendance';
 import moment from 'moment';
 import { Paper } from '@mui/material';
+import { DataGrid, GridEditRowsModel, GridRowParams, MuiBaseEvent, MuiEvent } from '@mui/x-data-grid';
 
-function Attendance() {
+type Props = typeof attendanceActions & {
+  attendanceState: AttendanceState;
+}
+
+function Attendance(props: Props) {
+  const { postAttendance, getAttendanceList, attendanceState } = props;
+  const { workingList  } = attendanceState;
+  const [ editRowModel, setEditRowsModel] = useState<GridEditRowsModel>();
+
+  useEffect(() => {
+    getAttendanceList(moment().format('yyyy-MM'));
+  }, [getAttendanceList]);
+
+  const handleRowEditStop = (params: GridRowParams, event: MuiEvent<MuiBaseEvent>) => {
+    if (editRowModel) {
+      postAttendance({
+        id: params.id,
+        workDate: params.row.workDate,
+        workStart: editRowModel[params.id].workStart.value as string,
+        workEnd: editRowModel[params.id].workEnd.value as string,
+        workOver: "",
+        workTotal: "",
+        workPlace: editRowModel[params.id].workPlace.value as string,
+      })
+    }
+  }
+
+  const onEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
+    setEditRowsModel(model);
+  }, []);
+
+  const handleClickWorkButton = (current: moment.Moment) => {
+    const todayRecord = workingList.rows.find(list => list.workDate === moment().format('YYYY-MM-DD'));
+    if (!todayRecord) return;
+
+    props.postAttendance({
+      id: current.format('yyyy-MM-DD'),
+      workDate: current.format('yyyy-MM-DD'),
+      workStart: todayRecord.workStart,
+      workEnd: todayRecord.workEnd,
+      workOver: "",
+      workTotal: "",
+      workPlace: todayRecord.workPlace,
+    })
+  }
+
+  const handleClickRestButton = (current: moment.Moment) => {}
+
   return (
     <Wrapper terminalCat="1">
       <BoxContainer>
-        <ClockBox />
+        <ClockBox
+          isWorkStart={false}
+          isRestStart={false}
+          handleClickWorkButton={handleClickWorkButton}
+          handleClickRestButton={handleClickRestButton}
+        />
       </BoxContainer>
       <WorkingGridContainer>
         <Caption>
-          <CalendarPicker
-            onChangeMonth={(value) => getAttendanceList(moment(value).format('yyyy-MM'))}
-          />
+          <CalendarPicker onChangeMonth={(value) => getAttendanceList(moment(value).format('yyyy-MM'))}/>
         </Caption>
         <ButtonGroup>
           <ExportButton />
           <SettingButton />
         </ButtonGroup>
-        <WorkingGrid />
+        <Container>
+          <DataGrid
+            classes={{ columnHeader: 'working-column-header' }}
+            rows={workingList.rows}
+            columns={workingList.columns}
+            checkboxSelection={false}
+            onRowEditStop={handleRowEditStop}
+            onEditRowsModelChange={onEditRowsModelChange}
+            disableSelectionOnClick
+            hideFooter
+            showCellRightBorder
+            headerHeight={35}
+            rowHeight={32}
+            editMode='row'
+          />
+        </Container>
       </WorkingGridContainer>
     </Wrapper>
   );
@@ -54,6 +120,22 @@ const Wrapper = styled.div<{ terminalCat: string }>`
   padding-top: 20px;
   box-sizing: border-box;
   height: calc(100vh - 50px);
+`;
+
+const Container = styled.div`
+  height: 472px;
+  width: calc(100% - 30px);
+  margin: 0 auto;
+  .working-column-header {
+    background-color: #2999AB;
+    color: ${props => props.theme.color.WHITE};
+  }
+  .css-1062sh2-MuiDataGrid-root
+  .MuiDataGrid-virtualScrollerContent--overflowed
+  .MuiDataGrid-row--lastVisible
+  .MuiDataGrid-cell {
+    border-right-color: rgba(224, 224, 224, 1);
+  }
 `;
 
 const Caption = styled.div`
