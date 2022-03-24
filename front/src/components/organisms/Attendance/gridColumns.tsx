@@ -1,38 +1,48 @@
-import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef, GridValueFormatterParams, GridValueGetterParams } from "@mui/x-data-grid";
 import dayjs, { extend } from "dayjs";
-import { Const } from "./commonUtil";
+import { Const } from "../../../lib/commonUtil";
 import duration from 'dayjs/plugin/duration';
 
 extend(duration);
 
-export const WorkingGridColumns: GridColDef[] = [
+export const GridColumns: GridColDef[] = [
   {
     field: 'workDate',
     headerName: 'WorkDate',
     flex: 1,
-    minWidth: 105
+    minWidth: 105,
   },
   {
     field: 'workStart',
     headerName: 'Start',
+    type: 'dateTime',
     flex: 1,
-    editable: true
+    editable: true,
+    valueFormatter: (params: GridValueFormatterParams) => {
+      let format = params.value;
+      if (format) {
+        format = dayjs(params.value as Date).format('HH:mm:ss');
+      }
+      return format;
+    }
   },
   {
     field: 'workEnd',
     headerName: 'End',
+    type: 'dateTime',
+    valueFormatter: (params) => {
+      let format = params.value;
+      if (format) {
+        format = dayjs(params.value as Date).format('HH:mm:ss');
+      }
+      return format;
+    },
     flex: 1,
     editable: true,
   },
   {
-    field: 'restStart',
-    headerName: 'RestStart',
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: 'restEnd',
-    headerName: 'RestEnd',
+    field: 'rest',
+    headerName: 'Rest',
     flex: 1,
     editable: true,
   },
@@ -59,10 +69,10 @@ export const WorkingGridColumns: GridColDef[] = [
 ];
 
 function setWorkTotal(params: GridValueGetterParams) {
-  const { workDate, workStart, workEnd } = params.row;
+  const { workStart, workEnd } = params.row;
   if (workStart && workEnd) {
-    const startMmt = dayjs(`${workDate} ${workStart}`);
-    const endMmt = dayjs(`${workDate} ${workEnd}`);
+    const startMmt = dayjs(workStart);
+    const endMmt = dayjs(workEnd);
     const diff = endMmt.diff(startMmt);
     params.row.workTotal = diffFormat(diff, 'hh:mm:ss');
   }
@@ -70,12 +80,14 @@ function setWorkTotal(params: GridValueGetterParams) {
 }
 
 function setWorkOver(params: GridValueGetterParams) {
-  const { workTotal } = params.row;
-  const totalMmt = dayjs(workTotal, 'hh:mm:ss');
-  const basicMmt = dayjs(`0${Const.BASIC_WORK_HOURS}:00:00`, 'hh:mm:ss');
-  const diff = totalMmt.diff(basicMmt);
-  if (diff > 0) {
-    params.row.workOver = diffFormat(diff, 'hh:mm:ss');
+  const { workStart, workEnd } = params.row;
+  if (workStart && workEnd) {
+    const baseMmt = dayjs(workStart).add(Const.BASIC_WORK_HOURS, 'hours');
+    const endMmt = dayjs(workEnd);
+    const diff = endMmt.diff(baseMmt);
+    if (diff > 0) {
+      params.row.workOver = diffFormat(diff, 'hh:mm:ss');
+    }
   }
   
   return params.row.workOver;

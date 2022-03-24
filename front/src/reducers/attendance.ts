@@ -2,7 +2,7 @@ import { GridColDef, GridRowId } from "@mui/x-data-grid";
 import { AxiosResponse } from "axios"
 import dayjs from "dayjs"
 import { ThunkAction } from "."
-import { WorkingGridColumns } from "../lib/workingGridColumns";
+import { GridColumns } from "../components/organisms/Attendance/gridColumns";
 import { storage } from "../lib/commonUtil"
 import { WebApi } from "../lib/webApi";
 
@@ -85,7 +85,7 @@ export function getAttendanceList(month: string): ThunkAction<FetchGetAttendance
 
 function createAttendanceRows(workingList: AttendanceApi.Get.Response[]): GridData {
   return {
-    columns: WorkingGridColumns,
+    columns: GridColumns,
     rows: workingList.map(list => {
       return {
         id: list.workDate,
